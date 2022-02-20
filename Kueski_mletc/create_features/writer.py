@@ -1,21 +1,12 @@
-
 class DataFrameWriter:
 
-    def __init__(self, spark, df, path_output):
+    @staticmethod
+    def write_features(df, output_path):
         """
-        Constructor.
-        """
-        self.__spark = spark
-        self.__df = df
-        self.__path_output = path_output
-
-    def write_features(self):
-        """
-        Write the ABT dataframe
-        :param df: Dataframe ABT
+        Write the features dataframe
+        :param df: Dataframe with feature columns
         :param output_path: Path to write
-        :param partition_by: Column of partition
-        :param date: end date from extraction
         """
-        self.__df.write.mode("overwrite").parquet(self.__path_output)
+        df.select(df.id, df.age, df.years_on_the_job, df.nb_previous_loans, df.avg_amount_loans_previous,
+                  df.flag_own_car, df.status).write.mode("overwrite").parquet(output_path)
         return 0

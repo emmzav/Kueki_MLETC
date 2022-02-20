@@ -1,19 +1,23 @@
-
-# -*- coding: utf-8 -*-
 import sys
 from configparser import ConfigParser
 from Kueski_mletc.controller import ControllerProcess
 
 
-def get_config(param):
+def get_config(phase):
+    """
+    Get parameters from configuration file
+    :param phase: Name of the phase to be executed.
+    It can be one of the following values: create_features, model_train or model_predict
+    :return my_config_parser_dict: Dictionary that contains that params to be used
+    """
     p = ConfigParser()
 
-    if param == 'create_features':
-        p.read('mletc_risk/conf/create_features.conf')
-    elif param == 'model_train':
-        p.read('mletc_risk/conf/model_train.conf')
-    elif param == 'model_predict':
-        p.read('mletc_risk/conf/model_predict.conf')
+    if phase == 'create_features':
+        p.read('Kueski_mletc/conf/create_features.conf')
+    elif phase == 'model_train':
+        p.read('Kueski_mletc/conf/model_train.conf')
+    elif phase == 'model_predict':
+        p.read('Kueski_mletc/conf/model_predict.conf')
     else:
         raise ValueError("--input-file must be one of the following phases: "
                          "create_features, model_train or model_predict")

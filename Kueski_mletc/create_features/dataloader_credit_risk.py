@@ -12,7 +12,8 @@ class DataLoader:
 
     def read(self):
         """
-        Generate dataframes to be clustered and split into seminew and more than 12 months
+        Read the csv input using a schema
+        :return df: Dataframe with risk information
         """
         schema = StructType([
             StructField("loan_id", IntegerType()),
