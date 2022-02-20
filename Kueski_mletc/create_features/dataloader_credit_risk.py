@@ -1,7 +1,7 @@
 from pyspark.sql.types import StructType, StructField, IntegerType, DateType, StringType, DoubleType
 
 
-class DataLoader:
+class DataLoaderRisk:
 
     def __init__(self, spark, input_path):
         """
