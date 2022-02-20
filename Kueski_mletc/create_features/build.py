@@ -17,18 +17,16 @@ class DataFrameBuilder:
 
     def calc_nb_previous_loans(self):
         """
-        Filter dataframe 813 with the only necessary accounts
-        :param df_813: Dataframe 813 with only the necessary columns and dates
-        :return: Filter dataframe 813
+        Calculate the number of previous loans
+        :return: Dataframe with column nb_previous_loans
         """
         window_spec = Window.partitionBy("id").orderBy("loan_date")
         self.df1 = self.df.withColumn("nb_previous_loans", row_number().over(window_spec)-1)
 
     def calc_avg_amount_loans_prev(self):
         """
-        Filter dataframe 813 with the only necessary accounts
-        :param df_813: Dataframe 813 with only the necessary columns and dates
-        :return: Filter dataframe 813
+        Calculate the average amount of loans previous
+        :return: Dataframe with column avg_amount_loans_previous
         """
         self.df2 = self.df1.withColumn("avg_amount_loans_previous",
                                        avg("loan_amount").over(Window.partitionBy(col('id'))
@@ -37,30 +35,27 @@ class DataFrameBuilder:
 
     def calc_age(self):
         """
-        Filter dataframe 813 with the only necessary accounts
-        :param df_813: Dataframe 813 with only the necessary columns and dates
-        :return: Filter dataframe 813
+        Calculate the age of the client according to the birthday date
+        :return: Dataframe with column age
         """
         self.df3 = self.df2.select(col('*'), ((datediff(current_date(), col('birthday')))/365).cast('int').alias('age'))
 
     def calc_years_on_the_job(self):
         """
-        Filter dataframe 813 with the only necessary accounts
-        :param df_813: Dataframe 813 with only the necessary columns and dates
-        :return: Filter dataframe 813
+        Calculate the years that the client has in her/his job
+        :return: Dataframe with column yearsjob
         """
         df = self.df3.select(col('*'),
                              ((datediff(current_date(), col('job_start_date')))/365).cast('int').alias('yearsjob'))
 
         self.df4 = df.select(col('*'),
-                       (when(col('yearsjob') <= 0, lit(None))
-                        .otherwise(col('yearsjob'))).alias('years_on_the_job')).drop('yearsjob')
+                             (when(col('yearsjob') <= 0, lit(None))
+                              .otherwise(col('yearsjob'))).alias('years_on_the_job')).drop('yearsjob')
 
     def calc_flag_own_car(self):
         """
-        Filter dataframe 813 with the only necessary accounts
-        :param df_813: Dataframe 813 with only the necessary columns and dates
-        :return: Filter dataframe 813
+        Obtein a flag according if the client has an own car
+        :return: Dataframe with column flag_own_car
         """
         df = self.df4.withColumn('flag_own_car', (when(col('flag_own_car') == 'N', lit(0)).otherwise(lit(1))))
         return df
