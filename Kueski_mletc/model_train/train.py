@@ -24,7 +24,7 @@ class ModelTrain:
 
     def data_smote(self):
         """
-        Calculate the number of previous loans
+        Using Synthetic Minority Over-Sampling Technique(SMOTE) to overcome sample imbalance problem
         """
         self.y = self.df_feat['status'].astype('int')
         self.df_feat.drop(['status', 'id'], axis=1, inplace=True)
@@ -33,7 +33,7 @@ class ModelTrain:
 
     def data_split(self):
         """
-        Calculate the number of previous loans
+        Split the data into test, and train sets
         """
         self.x_balance = pd.DataFrame(self.x_balance, columns=self.x.columns)
         self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.x_balance,  self.y_balance,
@@ -42,7 +42,8 @@ class ModelTrain:
 
     def random_forest_train(self):
         """
-        Calculate the number of previous loans
+        Train a Random Forest Classifier machine learning model
+        :return model: Random Forest model trained
         """
         self.model = RandomForestClassifier(n_estimators=5)
         self.model.fit(self.x_train, self.y_train)
@@ -50,7 +51,7 @@ class ModelTrain:
 
     def model_metrics(self):
         """
-        Calculate the number of previous loans
+        Calculate performance metrics of the trained model
         """
         y_predict = self.model.predict(self.x_test)
         print(pd.DataFrame(confusion_matrix(self.y_test, y_predict)))
@@ -58,4 +59,3 @@ class ModelTrain:
         print('Precision Score is {:.5}'.format(precision_score(self.y_test, y_predict)))
         print('Recall Score is {:.5}'.format(recall_score(self.y_test, y_predict)))
         print('Roc AUC Score is {:.5}'.format(roc_auc_score(self.y_test, y_predict)))
-
