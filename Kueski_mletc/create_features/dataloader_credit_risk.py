@@ -41,5 +41,8 @@ class DataLoaderRisk:
             StructField("loan_date", DateType()),
             StructField("loan_amount", DoubleType()),
         ])
-        df = self.spark.read.csv(self.input_path, header=True, nullValue='NA', schema=schema)
-        return df
+        try:
+            df = self.spark.read.csv(self.input_path, header=True, nullValue='NA', schema=schema)
+            return df
+        except FileNotFoundError:
+            raise FileNotFoundError(f'Input file {self.input_path} not found')
