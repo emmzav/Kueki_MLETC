@@ -5,7 +5,7 @@ from Kueski_mletc.controller import ControllerProcess
 
 def get_config(phase):
     """
-    Get parameters from configuration file
+    Get parameters from configuration file and load them into a dictionary
     :param phase: Name of the phase to be executed.
     It can be one of the following values: create_features, model_train or model_predict
     :return my_config_parser_dict: Dictionary that contains that params to be used

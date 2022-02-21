@@ -1,15 +1,11 @@
 from pyspark.sql import SparkSession
 
+from Kueski_mletc.model_train.train import ModelTrain
+from Kueski_mletc.model_train.persist_model import ModelWriter
 from Kueski_mletc.create_features.build import DataFrameBuilder
 from Kueski_mletc.create_features.writer import DataFrameWriter
-from Kueski_mletc.create_features.dataloader_credit_risk import DataLoaderRisk
 from Kueski_mletc.model_train.dataloader_features import DataLoaderFeatures
-from Kueski_mletc.model_train.train import ModelTrain
-
-
-import pandas as pd
-from imblearn.over_sampling import SMOTE
-from sklearn.model_selection import train_test_split
+from Kueski_mletc.create_features.dataloader_credit_risk import DataLoaderRisk
 
 
 class ControllerProcess:
@@ -45,4 +41,7 @@ class ControllerProcess:
             model_train.data_split()
             rf_model = model_train.random_forest_train()
             model_train.model_metrics()
+            model_writer = ModelWriter()
+            model_writer.write_model(rf_model, self.config_dict['config']['path_model_output'])
+
         return 0
