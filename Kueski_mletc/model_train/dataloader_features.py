@@ -11,6 +11,11 @@ class DataLoaderFeatures:
         :return df: Dataframe with the features information
         """
         pd.set_option("display.max_columns", None)
-        df = pd.read_parquet(input_path, engine='pyarrow')
+        try:
+            df = pd.read_parquet(input_path, engine='pyarrow')
+        except FileNotFoundError:
+            raise FileNotFoundError(f'Input file {input_path} not found')
         df.fillna(0, inplace=True)
         return df
+
+

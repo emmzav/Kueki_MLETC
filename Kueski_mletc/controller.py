@@ -1,11 +1,14 @@
 from pyspark.sql import SparkSession
 
 from Kueski_mletc.model_train.train import ModelTrain
+from Kueski_mletc.model_predict.predict import model_predict
+from Kueski_mletc.model_predict.model_loader import read_model
 from Kueski_mletc.model_train.persist_model import ModelWriter
 from Kueski_mletc.create_features.build import DataFrameBuilder
 from Kueski_mletc.create_features.writer import DataFrameWriter
 from Kueski_mletc.model_train.dataloader_features import DataLoaderFeatures
 from Kueski_mletc.create_features.dataloader_credit_risk import DataLoaderRisk
+from Kueski_mletc.model_predict.writer import write_predicts
 
 
 class ControllerProcess:
@@ -29,8 +32,10 @@ class ControllerProcess:
             builder.calc_avg_amount_loans_prev()
             builder.calc_age()
             builder.calc_years_on_the_job()
-            df_features = builder.calc_flag_own_car()
+            df = builder.calc_flag_own_car()
             writer = DataFrameWriter()
+            df_features = df.select(df.id, df.age, df.years_on_the_job, df.nb_previous_loans,
+                                    df.avg_amount_loans_previous, df.flag_own_car, df.status)
             writer.write_features(df_features, self.config_dict['config']['path_features_output'])
 
         elif self.config_dict['config']['stage_name'] == 'model_tain':
@@ -44,4 +49,10 @@ class ControllerProcess:
             model_writer = ModelWriter()
             model_writer.write_model(rf_model, self.config_dict['config']['path_model_output'])
 
+        elif self.config_dict['config']['stage_name'] == 'model_predict':
+            dataloader = DataLoaderFeatures()
+            df_feat = dataloader.read_features(self.config_dict['config']['path_features_input'])
+            rf_model = read_model(self.config_dict['config']['path_model_input'])
+            df_predict = model_predict(rf_model, df_feat)
+            write_predicts(df_predict, self.config_dict['config']['path_predict_output'])
         return 0
