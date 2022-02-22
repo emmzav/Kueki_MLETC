@@ -2,7 +2,7 @@
 
 
 ## About
-This application consist of 3 modules: 
+This application consist of 3 modules and API: 
 
 ###  Module 1: create_features
 
@@ -44,13 +44,13 @@ Replace the values of the parameters according to the actual paths
 
 ###  Module 3: model_predict
 
-This module exetutes the prediction of the machine learning model trained in the last module. 
+This module executes the prediction of the machine learning model trained in the last module. 
 An example of command line used for launching this module is:
 ```
 python worker.py model_predict
 ```
 
-The model_predictt.conf file contents should have the following structure:
+The model_predict.conf file contents should have the following structure:
 
 ```
 [config]
@@ -58,6 +58,50 @@ path_model_input = resources/model_risk.joblib
 path_features_input = resources/train_model.parquet
 path_predict_output = resources/predictions.csv
 stage_name = model_predict
+```
+Replace the values of the parameters according to the actual paths
+
+
+###  Flask API: api
+
+**WARNING**: It is necessary to execute before the modules: *create_features* and *model_predict*
+
+Flask API with to functions:
+a) Get the information of a specific client
+b) Get the prediction of a specific client
+
+Steps:
+1.- Execute the command:
+```
+python worker.py api
+```
+
+2.- Open abother terminal, you can choose between:
+    2.1.- Open Jupyter-Lab and open the notebook: API_notebook.ipynb
+    3.- Execute the following steps:
+```
+import requests
+
+client_id = <id_client>
+#Example: client_id = 5009033
+
+url = '<URL_fask>:<port>/'
+#Example: url = 'http://127.0.0.1:5000/'
+
+#Get information of a client
+requests.post(url+'get_cient_info', json=client_id).json()
+
+#Get prediction of a client
+requests.post(url+'model_predict', json=client_id).json()
+```
+
+The api.conf file contents should have the following structure:
+
+```
+[config]
+path_features_input = resources/train_model.parquet
+path_model_input = resources/model_risk.joblib
+stage_name = api
 ```
 Replace the values of the parameters according to the actual paths
 
@@ -76,6 +120,3 @@ pip install -r requirements.txt
 
 
 ## Docker
-
-
-## API
