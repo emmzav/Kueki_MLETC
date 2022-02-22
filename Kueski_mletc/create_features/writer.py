@@ -8,4 +8,5 @@ class DataFrameWriter:
         :param output_path: Path to write
         """
         df.write.mode("overwrite").parquet(output_path)
+        print(df.show(10))
         return 0
