@@ -18,6 +18,8 @@ def get_config(phase):
         p.read('Kueski_mletc/conf/model_train.conf')
     elif phase == 'model_predict':
         p.read('Kueski_mletc/conf/model_predict.conf')
+    elif phase == 'api':
+        p.read('Kueski_mletc/conf/api.conf')
     else:
         raise ValueError("--input-file must be one of the following phases: "
                          "create_features, model_train or model_predict")

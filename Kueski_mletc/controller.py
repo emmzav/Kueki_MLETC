@@ -9,6 +9,7 @@ from Kueski_mletc.create_features.writer import DataFrameWriter
 from Kueski_mletc.model_train.dataloader_features import DataLoaderFeatures
 from Kueski_mletc.create_features.dataloader_credit_risk import DataLoaderRisk
 from Kueski_mletc.model_predict.writer import write_predicts
+from Kueski_mletc.api import app
 
 
 class ControllerProcess:
@@ -55,4 +56,7 @@ class ControllerProcess:
             rf_model = read_model(self.config_dict['config']['path_model_input'])
             df_predict = model_predict(rf_model, df_feat)
             write_predicts(df_predict, self.config_dict['config']['path_predict_output'])
+
+        elif self.config_dict['config']['stage_name'] == 'api':
+            app.run(debug=True)
         return 0
