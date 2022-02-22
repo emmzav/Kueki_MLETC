@@ -120,3 +120,29 @@ pip install -r requirements.txt
 
 
 ## Docker
+
+You can also execute this project using Docker.
+
+Follow the next steps:
+
+1.- Build image
+```
+ docker build -t <image_name> .
+```
+
+2.- Run container using the stage that you want to execute
+```
+docker run  -p 5000:5000 -v $(pwd):/app kueski_ubuntu create features
+docker run  -p 5000:5000 -v $(pwd):/app kueski_ubuntu model_train
+docker run  -p 5000:5000 -v $(pwd):/app kueski_ubuntu model_predict
+docker run  -p 5000:5000 -v $(pwd):/app kueski_ubuntu api
+```
+You also can run an interactive container, and in its terminal, you can execute the python3 worker.py <phase> command:
+```
+docker run  -p 5000:5000 -v $(pwd):/app -it --entrypoint /bin/bash kueski_ubuntu 
+```
+
+There is also the possibility to run all the stages using docker-compose:
+```
+docker-compose run task <phase_name>
+```
